@@ -7,12 +7,14 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap');
 
-        :root {
-            --bg-color: #1B8755;
-            --text-color: #5d4037;
-            --accent-color: #ff6b6b;
-            --polaroid-border: #ffffff;
+    :root {
+        --bg-color: #e8f5e9;
+        --text-color: #5d4037;
+        --accent-color: #0288d1;
+        --polaroid-border: #ffffff;
         }
+
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
@@ -21,10 +23,31 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background:linear-gradient(135deg, #e8f5e9 80%, #a5d6a7 60%);
+            background: linear-gradient(135deg, #e8f5e9 80%, #a5d6a7 60%);
             font-family: 'Poppins', sans-serif;
             overflow-x: hidden;
             position: relative;
+        }
+
+        /* --- Music Icon --- */
+        .music-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 200;
+            animation: bounce 1s infinite;
+            display: none;
+        }
+
+        .music-icon.playing {
+            display: block;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
         }
 
         /* --- The Gift Box --- */
@@ -121,7 +144,7 @@
             50% { opacity: 1; }
         }
 
-        /* --- Main Container (Hidden Initially) --- */
+        /* --- Main Container --- */
         .main-content {
             display: none;
             flex-direction: column;
@@ -137,7 +160,6 @@
             opacity: 1;
         }
 
-        /* --- Layout with Letter at Center --- */
         .layout-container {
             display: flex;
             flex-wrap: wrap;
@@ -148,26 +170,16 @@
             position: relative;
         }
 
-        /* --- Polaroid Columns --- */
         .polaroid-column {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
 
-        .polaroid-column.left {
-            order: 1;
-        }
+        .polaroid-column.left { order: 1; }
+        .polaroid-column.right { order: 3; }
+        .letter-container { order: 2; }
 
-        .polaroid-column.right {
-            order: 3;
-        }
-
-        .letter-container {
-            order: 2;
-        }
-
-        /* --- Polaroid Style --- */
         .polaroid {
             width: 100px;
             height: 120px;
@@ -189,7 +201,6 @@
             object-fit: cover;
         }
 
-        /* --- The Letter --- */
         .letter {
             width: 280px;
             background-color: white;
@@ -200,7 +211,6 @@
             position: relative;
         }
 
-        /* Decorative tape */
         .letter::before {
             content: '';
             position: absolute;
@@ -216,7 +226,7 @@
 
         .letter h1 {
             font-family: 'Pacifico', cursive;
-            color: var(--accent-color);
+            color: #ff6b6b;
             margin-top: 0;
             font-size: 1.8rem;
             margin-bottom: 12px;
@@ -237,7 +247,6 @@
             text-align: right;
         }
 
-        /* --- Confetti --- */
         #conf_canvas {
             position: fixed;
             top: 0;
@@ -248,32 +257,34 @@
             z-index: 50;
         }
 
-        /* Responsive */
         @media (max-width: 600px) {
-            .layout-container {
-                flex-direction: column;
-            }
+            .layout-container { flex-direction: column; }
             .polaroid-column {
                 flex-direction: row !important;
                 order: unset !important;
             }
-            .letter-container {
-                order: unset !important;
-            }
+            .letter-container { order: unset !important; }
             .polaroid-column {
                 flex-wrap: wrap;
                 justify-content: center;
             }
-            .letter {
-                width: 220px;
-                padding: 22px;
-            }
+            .letter { width: 220px; padding: 22px; }
+            .music-icon { top: 10px; right: 10px; font-size: 24px; }
         }
     </style>
 </head>
 <body>
 
     <canvas id="conf_canvas"></canvas>
+
+    <!-- 🎵 Music Icon (Shows when music plays) -->
+    <div class="music-icon playing" id="musicIcon">🎵</div>
+
+    <!-- 🎵 Audio Element (Auto-play song when opened) -->
+    <audio id="birthdaySong" loop>
+        <!-- Replace the src with your own song file, or use this free one -->
+        <source src="sog.mp3" type="audio/mp3">
+    </audio>
 
     <!-- Gift Box -->
     <div class="gift-container" id="giftBox">
@@ -287,7 +298,7 @@
         
         <div class="layout-container">
             
-            <!-- LEFT COLUMN: Top Left, Mid Left, Bottom Left -->
+            <!-- LEFT COLUMN -->
             <div class="polaroid-column left">
                 <div class="polaroid" style="--rotation: -8deg;">
                     <img src="bw.jpg" alt="Photo 1">
@@ -303,14 +314,38 @@
             <!-- CENTER: The Letter -->
             <div class="letter-container">
                 <div class="letter">
-                    <h1>Happy Birthday!</h1>
-                    <p>Wishing you a day filled with love, laughter, and all your favorite things. You are an amazing person and deserve the best year ahead!</p>
-                    <p>May your birthday be as amazing as you are!</p>
-                    <div class="signature">— With love</div>
+                <h1>Happy Birthday, Lil Blue 💙</h1>
+
+                <p>
+                Today is all about celebrating you — your smile, your kindness, your laugh, and every little thing that makes you special. 
+                I’m so grateful to have someone like you in my life.
+                </p>
+
+                <p>
+                Thank you for being my comfort, my calm place, and one of the best parts of my days. 
+                You make everything feel softer, warmer, and more meaningful just by being here.
+                </p>
+
+                <p>
+                I hope this new year of your life brings you closer to your dreams, surrounds you with genuine happiness, and reminds you every day how loved you truly are.
+                </p>
+
+                <p>
+                No matter where life takes us, I’ll always cherish every memory, every conversation, and every moment with you.
+                </p>
+
+                <p>
+                Happy Birthday once again. 
+                May your day be filled with love, laughter, sweet surprises, and everything your heart wishes for. 💙
+                </p>
+
+                <div class="signature">
+                — With love
+                </div>
                 </div>
             </div>
 
-            <!-- RIGHT COLUMN: Top Right, Mid Right, Bottom Right -->
+            <!-- RIGHT COLUMN -->
             <div class="polaroid-column right">
                 <div class="polaroid" style="--rotation: 6deg;">
                     <img src="jelly.jpg" alt="Photo 4">
@@ -331,6 +366,8 @@
         const mainContent = document.getElementById('mainContent');
         const canvas = document.getElementById('conf_canvas');
         const ctx = canvas.getContext('2d');
+        const birthdaySong = document.getElementById('birthdaySong');
+        const musicIcon = document.getElementById('musicIcon');
 
         let isOpened = false;
 
@@ -342,10 +379,25 @@
                 isOpened = true;
                 giftBox.classList.add('hidden');
                 
+                // 🎵 Play music when gift opens
+                birthdaySong.play().catch(e => console.log('Auto-play blocked - user must interact first'));
+                musicIcon.style.display = 'block';
+                
                 setTimeout(() => {
                     mainContent.classList.add('show');
                     fireConfetti();
                 }, 500);
+            }
+        });
+
+        // Click music icon to pause/play
+        musicIcon.addEventListener('click', () => {
+            if (birthdaySong.paused) {
+                birthdaySong.play();
+                musicIcon.textContent = '🎵';
+            } else {
+                birthdaySong.pause();
+                musicIcon.textContent = '🔇';
             }
         });
 
