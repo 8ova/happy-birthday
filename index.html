@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday!</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@300;600&display=swap');
+
+        :root {
+            --bg-color: #1B8755;
+            --text-color: #5d4037;
+            --accent-color: #ff6b6b;
+            --polaroid-border: #ffffff;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background:linear-gradient(135deg, #e8f5e9 80%, #a5d6a7 60%);
+            font-family: 'Poppins', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* --- The Gift Box --- */
+        .gift-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            animation: float 3s ease-in-out infinite;
+            z-index: 100;
+            transition: opacity 0.5s, transform 0.5s;
+        }
+
+        .gift-container:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        .gift-container.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .box {
+            width: 100px;
+            height: 100px;
+            background-color: var(--accent-color);
+            position: relative;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .box::before {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 100%;
+            background-color: #ffe66d;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .box::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 20px;
+            background-color: #ffe66d;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .lid {
+            width: 110px;
+            height: 30px;
+            background-color: #ff9f43;
+            position: absolute;
+            top: -30px;
+            left: -5px;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .lid::after {
+            content: '';
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-color: #ffe66d;
+            border-radius: 50%;
+            top: -15px;
+            left: 40px;
+            box-shadow: inset -2px -2px 5px rgba(0,0,0,0.1);
+        }
+
+        .click-hint {
+            position: absolute;
+            bottom: -40px;
+            width: 100%;
+            text-align: center;
+            color: #5d4037;
+            font-weight: 600;
+            font-size: 14px;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(-50%, -50%) translateY(0); }
+            50% { transform: translate(-50%, -50%) translateY(-15px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        /* --- Main Container (Hidden Initially) --- */
+        .main-content {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 1s;
+            position: relative;
+        }
+
+        .main-content.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* --- Layout with Letter at Center --- */
+        .layout-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            max-width: 700px;
+            position: relative;
+        }
+
+        /* --- Polaroid Columns --- */
+        .polaroid-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .polaroid-column.left {
+            order: 1;
+        }
+
+        .polaroid-column.right {
+            order: 3;
+        }
+
+        .letter-container {
+            order: 2;
+        }
+
+        /* --- Polaroid Style --- */
+        .polaroid {
+            width: 100px;
+            height: 120px;
+            background-color: var(--polaroid-border);
+            padding: 6px 6px 28px 6px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.2);
+            transform: rotate(var(--rotation));
+            transition: transform 0.3s;
+        }
+
+        .polaroid:hover {
+            transform: rotate(0deg) scale(1.15);
+            z-index: 10;
+        }
+
+        .polaroid img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- The Letter --- */
+        .letter {
+            width: 280px;
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            text-align: center;
+            position: relative;
+        }
+
+        /* Decorative tape */
+        .letter::before {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 22px;
+            background-color: rgba(255,255,255,0.5);
+            border: 1px solid #ddd;
+            transform: translateX(-50%) rotate(-2deg);
+        }
+
+        .letter h1 {
+            font-family: 'Pacifico', cursive;
+            color: var(--accent-color);
+            margin-top: 0;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+        }
+
+        .letter p {
+            color: var(--text-color);
+            line-height: 1.5;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .signature {
+            margin-top: 18px;
+            font-family: 'Pacifico', cursive;
+            color: #ff6b6b;
+            font-size: 1.2rem;
+            text-align: right;
+        }
+
+        /* --- Confetti --- */
+        #conf_canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .layout-container {
+                flex-direction: column;
+            }
+            .polaroid-column {
+                flex-direction: row !important;
+                order: unset !important;
+            }
+            .letter-container {
+                order: unset !important;
+            }
+            .polaroid-column {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .letter {
+                width: 220px;
+                padding: 22px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="conf_canvas"></canvas>
+
+    <!-- Gift Box -->
+    <div class="gift-container" id="giftBox">
+        <div class="lid"></div>
+        <div class="box"></div>
+        <div class="click-hint">Click to Open!</div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+        
+        <div class="layout-container">
+            
+            <!-- LEFT COLUMN: Top Left, Mid Left, Bottom Left -->
+            <div class="polaroid-column left">
+                <div class="polaroid" style="--rotation: -8deg;">
+                    <img src="bw.jpg" alt="Photo 1">
+                </div>
+                <div class="polaroid" style="--rotation: 5deg;">
+                    <img src="train.jpg" alt="Photo 2">
+                </div>
+                <div class="polaroid" style="--rotation: -3deg;">
+                    <img src="habitat.jpg" alt="Photo 3">
+                </div>
+            </div>
+
+            <!-- CENTER: The Letter -->
+            <div class="letter-container">
+                <div class="letter">
+                    <h1>Happy Birthday!</h1>
+                    <p>Wishing you a day filled with love, laughter, and all your favorite things. You are an amazing person and deserve the best year ahead!</p>
+                    <p>May your birthday be as amazing as you are!</p>
+                    <div class="signature">— With love</div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Top Right, Mid Right, Bottom Right -->
+            <div class="polaroid-column right">
+                <div class="polaroid" style="--rotation: 6deg;">
+                    <img src="jelly.jpg" alt="Photo 4">
+                </div>
+                <div class="polaroid" style="--rotation: -4deg;">
+                    <img src="pf.jpg" alt="Photo 5">
+                </div>
+                <div class="polaroid" style="--rotation: 2deg;">
+                    <img src="bx.jpg" alt="Photo 6">
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const giftBox = document.getElementById('giftBox');
+        const mainContent = document.getElementById('mainContent');
+        const canvas = document.getElementById('conf_canvas');
+        const ctx = canvas.getContext('2d');
+
+        let isOpened = false;
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        giftBox.addEventListener('click', () => {
+            if (!isOpened) {
+                isOpened = true;
+                giftBox.classList.add('hidden');
+                
+                setTimeout(() => {
+                    mainContent.classList.add('show');
+                    fireConfetti();
+                }, 500);
+            }
+        });
+
+        // Confetti Logic
+        const particles = [];
+        const colors = ['#ff6b6b', '#ffe66d', '#4ecdc4', '#1a535c', '#ff9f43', '#a8e6cf'];
+
+        function fireConfetti() {
+            for (let i = 0; i < 150; i++) {
+                particles.push({
+                    x: window.innerWidth / 2,
+                    y: window.innerHeight / 2,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    velocity: {
+                        x: (Math.random() - 0.5) * 20,
+                        y: (Math.random() - 0.5) * 20
+                    },
+                    radius: Math.random() * 6 + 3,
+                    gravity: 0.25,
+                    opacity: 1
+                });
+            }
+            animateConfetti();
+        }
+
+        function animateConfetti() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            particles.forEach((p, index) => {
+                p.x += p.velocity.x;
+                p.y += p.velocity.y;
+                p.velocity.y += p.gravity;
+                p.opacity -= 0.008;
+
+                ctx.globalAlpha = Math.max(0, p.opacity);
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (p.opacity <= 0) {
+                    particles.splice(index, 1);
+                }
+            });
+
+            if (particles.length > 0) {
+                requestAnimationFrame(animateConfetti);
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
